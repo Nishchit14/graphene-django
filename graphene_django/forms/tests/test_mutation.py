@@ -36,6 +36,12 @@ class PetForm(forms.ModelForm):
         return age
 
 
+class FilmDetailsForm(forms.ModelForm):
+    class Meta:
+        model = FilmDetails
+        fields = "__all__"
+
+
 class PetType(DjangoObjectType):
     class Meta:
         model = Pet
@@ -192,22 +198,22 @@ class ModelFormMutationTests(TestCase):
         self.assertNotIn("id", PetMutation.Input._meta.fields)
 
     def test_return_field_name_is_camelcased(self):
-        class PetMutation(DjangoModelFormMutation):
+        class FilmDetailsMutation(DjangoModelFormMutation):
             class Meta:
-                form_class = PetForm
+                form_class = FilmDetailsForm
                 model = FilmDetails
 
-        self.assertEqual(PetMutation._meta.model, FilmDetails)
-        self.assertEqual(PetMutation._meta.return_field_name, "filmDetails")
+        self.assertEqual(FilmDetailsMutation._meta.model, FilmDetails)
+        self.assertEqual(FilmDetailsMutation._meta.return_field_name, "filmDetails")
 
     def test_custom_return_field_name(self):
         class PetMutation(DjangoModelFormMutation):
             class Meta:
                 form_class = PetForm
-                model = Film
+                model = Pet
                 return_field_name = "animal"
 
-        self.assertEqual(PetMutation._meta.model, Film)
+        self.assertEqual(PetMutation._meta.model, Pet)
         self.assertEqual(PetMutation._meta.return_field_name, "animal")
         self.assertIn("animal", PetMutation._meta.fields)
 
